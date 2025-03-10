@@ -16,7 +16,8 @@ const LeadForm = () => {
     fuelType: "",
     paymentType: "",
     residency: "",
-    monthlyPayment: "",
+    monthlyGasPayment: "",
+    monthlyElectricityPayment: "",
     comments: "",
     smsConsent: false,
     emailConsent: false,
@@ -261,14 +262,24 @@ const LeadForm = () => {
   </select>
 </div>
 
-        <input
-          type="text"
-          name="monthlyPayment"
-          placeholder="Current Monthly Payment (£)"
-          value={formData.monthlyPayment}
-          onChange={handleChange}
-          className="w-full p-2 border rounded-lg"
-        />
+<input
+  type="text"
+  name="monthlyGasPayment"
+  placeholder="Monthly Gas Payment (£)"
+  value={formData.monthlyGasPayment}
+  onChange={handleChange}
+  className="w-full p-2 border rounded-lg"
+/>
+
+<input
+  type="text"
+  name="monthlyElectricityPayment"
+  placeholder="Monthly Electricity Payment (£)"
+  value={formData.monthlyElectricityPayment}
+  onChange={handleChange}
+  className="w-full p-2 border rounded-lg"
+/>
+
 
 <div className="mb-4">
   <label htmlFor="comments" className="block text-gray-700 font-medium mb-2">
