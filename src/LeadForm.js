@@ -96,13 +96,19 @@ const LeadForm = () => {
           onChange={handleChange}
           className="w-full p-2 border rounded-lg"
         />
-        <input
-          type="date"
-          name="dateOfBirth"
-          value={formData.dateOfBirth}
-          onChange={handleChange}
-          className="w-full p-2 border rounded-lg"
-        />
+        <div className="mb-4">
+  <label htmlFor="dateOfBirth" className="block text-gray-700 font-medium mb-2">
+    Date of Birth
+  </label>
+  <input
+    type="date"
+    id="dateOfBirth"
+    name="dateOfBirth"
+    value={formData.dateOfBirth}
+    onChange={handleChange}
+    className="w-full p-2 border rounded-lg"
+  />
+</div>
         <div className="flex items-center justify-between">
   <span className="text-gray-700 font-medium">Are you between the ages of 18 and 75?</span>
   <label className="relative inline-flex items-center cursor-pointer">
