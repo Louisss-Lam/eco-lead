@@ -8,7 +8,7 @@ const LeadForm = () => {
     firstName: "",
     lastName: "",
     dateOfBirth: "",
-    ageBetween18And75: "",
+    // ageBetween18And75: "",
     phone: "",
     email: "",
     callForRateFix: "",
@@ -21,6 +21,7 @@ const LeadForm = () => {
     comments: "",
     smsConsent: false,
     emailConsent: false,
+    responsibleForBills: false,
   });
 
   const handleChange = (e) => {
@@ -31,10 +32,32 @@ const LeadForm = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Submitted:", formData);
+    
+    try {
+      const response = await fetch("https://dwmeco.co.uk//submit_form.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        console.log("Form submitted successfully!");
+        alert("Thank you! Your submission has been received.");
+        window.location.reload();
+      } else {
+        console.error("Form submission failed.");
+        alert("Oops! Something went wrong.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Error submitting form.");
+    }
   };
+  
 
   return (
     <div className="max-w-2xl mx-auto bg-white shadow-lg p-6 rounded-lg mt-10">
@@ -109,7 +132,7 @@ const LeadForm = () => {
     className="w-full p-2 border rounded-lg"
   />
 </div>
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
   <span className="text-gray-700 font-medium">Are you between the ages of 18 and 75?</span>
   <label className="relative inline-flex items-center cursor-pointer">
     <input
@@ -124,7 +147,7 @@ const LeadForm = () => {
     <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-lime-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-lime-400"></div>
     <span className="ml-3 text-gray-900">{formData.ageBetween18And75 ? "Yes" : "No"}</span>
   </label>
-</div>
+</div> */}
 
         <input
           type="tel"
@@ -146,7 +169,7 @@ const LeadForm = () => {
         {/* Energy Details */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
   <span className="text-gray-700 sm:w-3/4 font-medium">
-    We work with a range of gas and electricity partners; would you be interested in a call to fix your rate & protect you from future rises?
+  We work with a range of gas and electricity partners; would you be interested in a call to see if they can help you get a better deal on your energy supply?
   </span>
   <label className="relative inline-flex items-center cursor-pointer">
     <input
@@ -161,6 +184,27 @@ const LeadForm = () => {
     <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-lime-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-lime-400"></div>
     <span className="ml-4 text-gray-900">
       {formData.callForRateFix ? "Yes" : "No"}
+    </span>
+  </label>
+</div>
+
+<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+  <span className="text-gray-700 sm:w-3/4 font-medium">
+  Are you responsible for paying your energy bills?
+  </span>
+  <label className="relative inline-flex items-center cursor-pointer">
+    <input
+      type="checkbox"
+      name="responsibleForBills"
+      checked={formData.responsibleForBills}
+      onChange={(e) =>
+        setFormData({ ...formData, responsibleForBills: e.target.checked })
+      }
+      className="sr-only peer"
+    />
+    <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-lime-300 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-lime-400"></div>
+    <span className="ml-4 text-gray-900">
+      {formData.responsibleForBills ? "Yes" : "No"}
     </span>
   </label>
 </div>
@@ -332,6 +376,17 @@ const LeadForm = () => {
         >
           Submit
         </button>
+        <p className="text-xs text-gray-500 mt-2 text-center">
+  By submitting this form, you agree to our{" "}
+  <a
+    href="https://www.scottishpower.co.uk/legal/privacy-policy"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-lime-600 underline hover:text-lime-800"
+  >
+     Privacy Policy | Gas and Electricity Company | ScottishPower 
+  </a>.
+</p>
       </form>
     </div>
   );
