@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Energy_logo from './DWM_Energy_Services.png';
 
 const LeadForm = () => {
@@ -24,6 +24,28 @@ const LeadForm = () => {
     responsibleForBills: false,
   });
 
+  const refs = {
+    installer: useRef(),
+    title: useRef(),
+    firstName: useRef(),
+    lastName: useRef(),
+    dateOfBirth: useRef(),
+    phone: useRef(),
+    email: useRef(),
+    callForRateFix: useRef(),
+    responsibleForBills: useRef(),
+    supplier: useRef(),
+    fuelType: useRef(),
+    paymentType: useRef(),
+    residency: useRef(),
+    monthlyGasPayment: useRef(),
+    monthlyElectricityPayment: useRef(),
+    smsConsent: useRef(),
+    emailConsent: useRef(),
+  };
+
+  const [errors, setErrors] = useState({});
+  
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -34,9 +56,56 @@ const LeadForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+  
+    const requiredFields = [
+      "installer",
+      "title",
+      "firstName",
+      "lastName",
+      "dateOfBirth",
+      "phone",
+      "email",
+      // "callForRateFix",
+      // "responsibleForBills",
+      "supplier",
+      "fuelType",
+      "paymentType",
+      "residency",
+      "monthlyGasPayment",
+      "monthlyElectricityPayment",
+      "smsConsent",
+      "emailConsent",
+    ];
+  
+    const newErrors = {};
+  
+    for (const field of requiredFields) {
+      if (
+        formData[field] === "" ||
+        formData[field] === null ||
+        formData[field] === undefined
+      ) {
+        newErrors[field] = true;
+  
+        // Scroll to the first missing field
+        if (refs[field] && refs[field].current) {
+          refs[field].current.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        break; // Only scroll to the first one
+      }
+    }
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      alert("Please complete all required fields.");
+      return; // Stop submit
+    } else {
+      setErrors({});
+    }
+  
+    // Submit the form
     try {
-      const response = await fetch("https://dwmeco.co.uk//submit_form.php", {
+      const response = await fetch("https://dwmeco.co.uk/submit_form.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,6 +127,7 @@ const LeadForm = () => {
     }
   };
   
+  
 
   return (
     <div className="max-w-2xl mx-auto bg-white shadow-lg p-6 rounded-lg mt-10">
@@ -75,15 +145,16 @@ const LeadForm = () => {
         <label className="block">
           <span className="text-gray-700 font-medium">Installer Name</span>
           <select
+            ref={refs.installer}
             name="installer"
             value={formData.installer}
             onChange={handleChange}
             className="w-full mt-1 p-2 border rounded-lg"
           >
             <option value="">Select Installer</option>
-            <option value="Installer One">Installer One</option>
-            <option value="Installer Two">Installer Two</option>
-            <option value="Installer Three">Installer Three</option>
+            <option value="Installer One">Emerald green Energy</option>
+            {/* <option value="Installer Two">Installer Two</option>
+            <option value="Installer Three">Installer Three</option> */}
           </select>
         </label>
 
@@ -91,6 +162,7 @@ const LeadForm = () => {
         <label className="block">
           <span className="text-gray-700 font-medium">Title</span>
           <select
+            ref={refs.title}
             name="title"
             value={formData.title}
             onChange={handleChange}
@@ -104,6 +176,7 @@ const LeadForm = () => {
         </label>
 
         <input
+          ref={refs.firstName}
           type="text"
           name="firstName"
           placeholder="First Name"
@@ -112,6 +185,7 @@ const LeadForm = () => {
           className="w-full p-2 border rounded-lg"
         />
         <input
+          ref={refs.lastName}
           type="text"
           name="lastName"
           placeholder="Last Name"
@@ -124,6 +198,7 @@ const LeadForm = () => {
     Date of Birth
   </label>
   <input
+    ref={refs.dateOfBirth}
     type="date"
     id="dateOfBirth"
     name="dateOfBirth"
@@ -150,6 +225,7 @@ const LeadForm = () => {
 </div> */}
 
         <input
+          ref={refs.phone}
           type="tel"
           name="phone"
           placeholder="Phone Number"
@@ -158,6 +234,7 @@ const LeadForm = () => {
           className="w-full p-2 border rounded-lg"
         />
         <input
+          ref={refs.email}
           type="email"
           name="email"
           placeholder="Email Address"
@@ -214,6 +291,7 @@ const LeadForm = () => {
     Who is your current supplier?
   </label>
   <select
+    ref={refs.supplier}
     id="supplier"
     name="supplier"
     value={formData.supplier}
@@ -264,6 +342,7 @@ const LeadForm = () => {
     Dual or Single Fuel?
   </label>
   <select
+    ref={refs.fuelType}
     id="fuelType"
     name="fuelType"
     value={formData.fuelType}
@@ -281,6 +360,7 @@ const LeadForm = () => {
     Payment Type
   </label>
   <select
+    ref={refs.paymentType}
     id="paymentType"
     name="paymentType"
     value={formData.paymentType}
@@ -300,6 +380,7 @@ const LeadForm = () => {
     Are you a Homeowner or Tenant?
   </label>
   <select
+    ref={refs.residency}
     id="residency"
     name="residency"
     value={formData.residency}
@@ -313,6 +394,7 @@ const LeadForm = () => {
 </div>
 
 <input
+  ref={refs.monthlyGasPayment}
   type="text"
   name="monthlyGasPayment"
   placeholder="Monthly Gas Payment (£)"
@@ -322,6 +404,7 @@ const LeadForm = () => {
 />
 
 <input
+  ref={refs.monthlyElectricityPayment}
   type="text"
   name="monthlyElectricityPayment"
   placeholder="Monthly Electricity Payment (£)"
